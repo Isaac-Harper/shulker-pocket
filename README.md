@@ -20,6 +20,7 @@ There is no on-screen overlay — the swap is the feedback, and you already know
 ./gradlew genSources    # decompiled MC sources for navigation
 ./gradlew runClient     # dev client
 ./gradlew runServer     # dev dedicated server
+./gradlew test          # ContainerOps unit tests
 ./gradlew build         # outputs build/libs/shulker-pocket-0.1.0.jar
 ```
 
@@ -34,7 +35,6 @@ Edit `config/shulker_pocket.json` (written on first launch). No in-game screen i
 | `invertScroll`            | `false` | Flip scroll direction.                           |
 | `cooldownMs`              | `50`    | Min ms between scroll fires (debounce).          |
 | `allowEmptyPosition`      | `true`  | Let the cursor land on "bare hands".             |
-| `playSounds`              | `true`  | Play swap / deny sounds.                         |
-| `respectVanillaSlotChange`| `true`  | Reserved for future per-context behavior.        |
+| `playSounds`              | `true`  | Play subtle swap / deny sounds.                  |
 
 See [SPEC.md](SPEC.md) for the full design, edge cases, and the `// VERIFY:` checklist.

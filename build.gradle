@@ -1,6 +1,7 @@
 plugins {
     id 'net.fabricmc.fabric-loom' version "${loom_version}"
     id 'maven-publish'
+    id 'com.modrinth.minotaur' version '2.9.0'
 }
 
 version = project.mod_version
@@ -28,6 +29,14 @@ dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     implementation "net.fabricmc:fabric-loader:${project.loader_version}"
     implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
+    // Unit tests run under Fabric's JUnit launcher (bundles JUnit 5) so ContainerOps can be
+    // exercised against real ItemStacks after a Minecraft Bootstrap.
+    testImplementation "net.fabricmc:fabric-loader-junit:${project.loader_version}"
+}
+
+test {
+    useJUnitPlatform()
 }
 
 processResources {
@@ -47,4 +56,25 @@ java {
 
     sourceCompatibility = JavaVersion.VERSION_25
     targetCompatibility = JavaVersion.VERSION_25
+}
+
+// Modrinth publishing (Minotaur). Publish with:
+//   MODRINTH_TOKEN=<your PAT> ./gradlew modrinth
+// Push README.md as the project description with:
+//   MODRINTH_TOKEN=<your PAT> ./gradlew modrinthSyncBody
+// Set modrinth_project_id in gradle.properties to your project's slug or ID once it exists.
+modrinth {
+    token = System.getenv("MODRINTH_TOKEN")
+    projectId = project.modrinth_project_id
+    versionNumber = project.version
+    versionName = "Shulker Pocket ${project.version}"
+    versionType = "alpha"
+    uploadFile = tasks.jar                 // no-remap loom: the plain jar is the mod jar
+    gameVersions = ["${project.minecraft_version}"]
+    loaders = ["fabric"]
+    changelog = "Initial alpha for Minecraft ${project.minecraft_version}."
+    dependencies {
+        required.project "fabric-api"
+    }
+    syncBodyFrom = rootProject.file("README.md").text
 }

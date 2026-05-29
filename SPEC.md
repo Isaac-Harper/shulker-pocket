@@ -3,9 +3,9 @@
 A Fabric mod that turns an off-hand shulker box into a live, scrollable tool belt.
 Sneak + scroll cycles items through the main hand.
 
-> **Status:** M1 reached — the skeleton compiles against MC 26.1.2 and produces
-> `build/libs/shulker-pocket-0.1.0.jar`. All mapping symbols are resolved; runtime
-> milestones (M2–M4) are still pending an in-game `runClient`/`runServer` session.
+> **Status:** working end-to-end (M1–M3). Builds against MC 26.1.2, scroll round-trips,
+> and sneak+scroll cycles through all items in-game. The HUD (M4) was dropped by design.
+> Remaining: M5 — sounds, config polish, and packaging for release.
 
 ## Target
 
@@ -77,20 +77,25 @@ items. The home slot survives the item leaving the box.
 
 ## HUD overlay
 
-- Horizontal strip above the off-hand slot. 7 item icons centered on the current cursor.
-- Yellow box around the selected item (like the hotbar selector).
-- Empty slots in the shulker hidden, not shown as gaps.
-- Visible whenever off-hand is a container; dimmed when not sneaking, full opacity when sneaking.
+None — dropped by design. The swap itself is the feedback, and the player already knows what's in
+their box. (An earlier version attached an element after the vanilla hotbar; it was removed because
+the cursor is now server-authoritative home-slot state with no client sync, and the display added
+clutter without earning its complexity.)
 
 ## Networking
 
 One C2S payload. Server is authoritative.
 
 ```
-ScrollPayload { direction: byte }   // -1 or +1
+ScrollPayload {
+  direction: byte,      // -1 or +1
+  allowEmpty: boolean,  // client config: may the cursor land on bare hands?
+  playSounds: boolean   // client config: should the server play feedback sounds?
+}
 ```
 
-Identifier: `shulker_pocket:scroll`
+The two booleans ride along because config is client-only — the server reads no config file, so the
+preferences it needs to honour travel with the action. Identifier: `shulker_pocket:scroll`
 
 ### Server handler flow
 
@@ -103,10 +108,13 @@ on receive ScrollPayload(direction):
   if contents == null: return                    // not a container
 
   mainHand = player.getMainHandItem()
-  newMainHand, newContents = swap(contents, mainHand, direction)
+  home = HOME.getOrDefault(player.uuid, NO_HOME)             // per-player cursor
+  result = swap(contents, mainHand, home, direction)         // null → refuse, mutate nothing
+  if result == null: return
 
-  offhand.set(DataComponents.CONTAINER, newContents)
-  player.setItemInHand(InteractionHand.MAIN_HAND, newMainHand)
+  offhand.set(DataComponents.CONTAINER, result.contents)
+  player.setItemInHand(InteractionHand.MAIN_HAND, result.mainHand)
+  HOME.put(player.uuid, result.homeSlot)                     // remember the new cursor
   player.inventoryMenu.broadcastChanges()
 ```
 
@@ -130,9 +138,7 @@ ci.cancel()                                      // suppress vanilla hotbar chan
   "invertScroll": false,
   "cooldownMs": 50,
   "allowEmptyPosition": true,
-  "playSounds": true,
-  "hudAlwaysVisible": true,
-  "respectVanillaSlotChange": true
+  "playSounds": true
 }
 ```
 
@@ -150,18 +156,14 @@ mappings the skeleton was first written against; the resolved names are:
 - [x] `Player.getMainHandItem() / getOffhandItem() / setItemInHand() / isShiftKeyDown()` — unchanged
 - [x] `ResourceLocation` → **`net.minecraft.resources.Identifier`** (`fromNamespaceAndPath` unchanged)
 - [x] `PayloadTypeRegistry.playC2S()` → **`serverboundPlay()`**
-- [x] HUD API rewritten: `HudLayerRegistrationCallback` / `IdentifiedLayer.HOTBAR`
-      → **`hud.HudElementRegistry.attachElementAfter(...)`** + **`hud.VanillaHudElements.HOTBAR`**
-- [x] `GuiGraphics` → **`GuiGraphicsExtractor`** (extract-render-state pipeline; HUD callback is
-      `extractRenderState(GuiGraphicsExtractor, DeltaTracker)`); `renderItem`→`item`, `renderOutline`→`outline`
 
-One non-mapping `// VERIFY:` remains in `PocketHudOverlay` — the `screenH - 59` pixel offset for
-HUD placement, which needs in-game tuning (M4).
+All `// VERIFY:` tags have been removed from the source.
 
 ## Milestones
 
 - [x] **M1 — Skeleton compiles.** `./gradlew build` produces the jar against 26.1.2.
-- [ ] **M2 — Payload round-trips.** Client sends, server logs receipt. No swap yet.
-- [ ] **M3 — Swap works on dedicated server.** Sneak+scroll cycles items end-to-end.
-- [ ] **M4 — HUD.** Visible overlay with selected slot highlight.
-- [ ] **M5 — Config + sounds + polish.** Ship to Modrinth as alpha.
+- [x] **M2 — Payload round-trips.** Client sends `ScrollPayload`, server receives.
+- [x] **M3 — Swap works.** Sneak+scroll cycles through all items end-to-end (home-slot cursor).
+- [x] **M4 — ~~HUD~~.** Dropped by design — no on-screen overlay.
+- [~] **M5 — Config + sounds + polish.** Done: wired config, subtle swap/deny sounds, logout cleanup,
+  unit tests, mod metadata + icon + LICENSE. Remaining: real icon art and the actual Modrinth upload.

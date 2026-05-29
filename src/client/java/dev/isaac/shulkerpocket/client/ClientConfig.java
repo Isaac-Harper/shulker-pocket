@@ -22,7 +22,6 @@ public final class ClientConfig {
     public int cooldownMs = 50;
     public boolean allowEmptyPosition = true;
     public boolean playSounds = true;
-    public boolean respectVanillaSlotChange = true;
 
     public static ClientConfig load() {
         Path path = FabricLoader.getInstance().getConfigDir().resolve("shulker_pocket.json");

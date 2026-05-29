@@ -36,7 +36,8 @@ public final class ContainerOps {
      */
     public record SwapResult(ItemStack mainHand, ItemContainerContents contents, int homeSlot) {}
 
-    public static SwapResult swap(ItemContainerContents contents, ItemStack mainHand, int homeSlot, byte direction) {
+    public static SwapResult swap(ItemContainerContents contents, ItemStack mainHand, int homeSlot,
+                                  byte direction, boolean allowEmpty) {
         // 1. Materialize the 27 slots.
         NonNullList<ItemStack> slots = NonNullList.withSize(SLOTS, ItemStack.EMPTY);
         contents.copyInto(slots);
@@ -61,16 +62,23 @@ public final class ContainerOps {
         }
         if (occupied.isEmpty()) return null; // empty shulker + empty hand → no-op (soft deny)
 
-        // 4. Cursor: where the held item now sits, else the bare-hands stop (logical index == size).
-        int cursor = homeSlot == NO_HOME ? occupied.size() : occupied.indexOf(homeSlot);
+        // 4. Cursor: where the held item now sits, else the bare-hands stop. When the bare-hands stop
+        //    is disabled, an empty cursor sits at -1 so the first step lands on a real item.
+        int cursor;
+        if (homeSlot != NO_HOME) {
+            cursor = occupied.indexOf(homeSlot);
+        } else {
+            cursor = allowEmpty ? occupied.size() : -1;
+        }
 
-        // 5. Step and wrap. Range [0, occupied.size()] inclusive — the extra stop is "bare hands".
+        // 5. Step and wrap. With the bare-hands stop, the range is [0, occupied.size()] inclusive (the
+        //    extra slot is "bare hands"); without it, [0, occupied.size()) — you always hold an item.
         int step = direction > 0 ? 1 : -1;
-        int positions = occupied.size() + 1;
+        int positions = occupied.size() + (allowEmpty ? 1 : 0);
         int next = Math.floorMod(cursor + step, positions);
 
         // 6. Resolve the new position.
-        if (next == occupied.size()) {
+        if (allowEmpty && next == occupied.size()) {
             // Bare-hands stop: the held item stays parked at its home, hand goes empty.
             return new SwapResult(ItemStack.EMPTY, ItemContainerContents.fromItems(slots), NO_HOME);
         }

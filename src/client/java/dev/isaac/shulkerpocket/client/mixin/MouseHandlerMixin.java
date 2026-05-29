@@ -40,7 +40,10 @@ public class MouseHandlerMixin {
         byte direction = (byte) (vertical > 0 ? 1 : -1);
         if (ShulkerPocketClient.config.invertScroll) direction = (byte) -direction;
 
-        ClientPlayNetworking.send(new ScrollPayload(direction));
+        ClientPlayNetworking.send(new ScrollPayload(
+            direction,
+            ShulkerPocketClient.config.allowEmptyPosition,
+            ShulkerPocketClient.config.playSounds));
         ci.cancel(); // suppress the vanilla hotbar-slot change for this scroll event
     }
 }

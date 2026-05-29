@@ -13,10 +13,10 @@ of truth for the swap algorithm, edge cases, and HUD layout.
 
 ## Status / how to read the source
 
-**M1 reached: the skeleton compiles** against MC 26.1.2 (`./gradlew build` → the jar). All mapping
-`// VERIFY:` tags have been resolved against the real 26.1 names and removed; only one non-mapping
-VERIFY remains (the HUD pixel offset in `PocketHudOverlay`, to be tuned in-game). Runtime
-milestones M2–M4 are still unverified — nothing has been launched in a dev client/server yet.
+**Working end-to-end (M1–M3).** Builds against MC 26.1.2 (`./gradlew build` → the jar), the scroll
+payload round-trips, and sneak+scroll cycles through all items in-game (confirmed by the author).
+All mapping `// VERIFY:` tags are resolved against the real 26.1 names and removed. The HUD (M4) was
+dropped by design. Remaining: M5 — sounds, config polish, packaging.
 
 **26.1 is unobfuscated.** From MC 26.1 the game ships with real Mojang names + parameter names, so
 there are no deobfuscation mappings and Fabric dropped Yarn. The build uses the
@@ -41,8 +41,11 @@ renames (e.g. `ResourceLocation`→`Identifier`, `GuiGraphics`→`GuiGraphicsExt
 ./gradlew build         # → build/libs/shulker-pocket-0.1.0.jar
 ```
 
-There is no test source set yet; `ContainerOps` is written as pure logic specifically so a JUnit
-suite can be added against it without a running client.
+`./gradlew test` runs the JUnit suite (`src/test`, via `fabric-loader-junit`). `ContainerOpsTest`
+exercises the rotating swap against real `ItemStack`s. Note its `@BeforeAll`: after
+`Bootstrap.bootStrap()` it binds an empty `DataComponentMap` to every item, because 26.1 binds
+per-item components in a registry data-load phase a bare bootstrap skips (otherwise `new ItemStack`
+throws "Components not bound yet"). The swap logic doesn't read component contents, so this is safe.
 
 ## Architecture
 
@@ -51,9 +54,8 @@ re-validates every gate and is the only side that mutates inventory. The mod mus
 **both** sides.
 
 **Split source sets** (Loom `splitEnvironmentSourceSets()`): `src/main` is common + server,
-`src/client` is client-only. `client` depends on `main`, so client code may import server classes
-(e.g. `PocketHudOverlay` reads `ContainerOps.SLOTS`) — but **not** the reverse. Keep anything the
-server needs in `src/main`.
+`src/client` is client-only. `client` depends on `main`, so client code may import server classes —
+but **not** the reverse. Keep anything the server needs in `src/main`.
 
 **The scroll round-trip** (one direction, client → server):
 
@@ -64,13 +66,14 @@ server needs in `src/main`.
    in `ShulkerPocket#onInitialize` via `PayloadTypeRegistry.playC2S()`.
 3. `server/ScrollHandler#receive` re-checks sneaking (anti-cheat — never trusts the client),
    reads the off-hand `ItemContainerContents`, and delegates to `ContainerOps`.
-4. `server/ContainerOps#swap` is the pure rotating-swap algorithm. It returns a `SwapResult`
-   (new main-hand stack + new contents) or `null` to refuse. `ScrollHandler` writes the result
-   back and calls `broadcastChanges()`.
+4. `server/ContainerOps#swap` is the pure rotating-swap algorithm. It takes the player's current
+   `homeSlot` and returns a `SwapResult` (new main-hand stack + new contents + new home slot) or
+   `null` to refuse. `ScrollHandler` holds the per-player `UUID → homeSlot` cursor map, writes the
+   result back, and calls `broadcastChanges()`.
 
-**HUD** is rendered entirely client-side: `client/PocketHudOverlay` is attached after the hotbar
-layer in `ShulkerPocketClient` via `HudLayerRegistrationCallback`. It re-derives the same cursor
-the server uses; there is no state sync for it.
+**No HUD.** There is no on-screen overlay — dropped by design (the swap is the feedback). Don't
+reintroduce one without a server→client cursor sync: the cursor is server-authoritative home-slot
+state and cannot be re-derived on the client by content-matching.
 
 **Config** (`client/ClientConfig`) is a plain GSON-serialized POJO at
 `config/shulker_pocket.json`, loaded once at client init and written with defaults if missing.
@@ -79,5 +82,7 @@ It is client-only; the server does not read it.
 ## Conventions
 
 - Mixin members are prefixed `shulker_pocket$…` to avoid clashes with the target class.
-- The cursor model treats logical position `occupied.size()` as the "bare hands" slot — the
-  `+1` in the modulo. Preserve this when editing `ContainerOps`; the HUD and swap must agree.
+- The cursor is tracked by **home slot** (the slot the held item came from), persisted per player in
+  `ScrollHandler`. Do **not** re-derive it by matching the held item against the contents — that
+  collapses the cursor onto the first slot and makes scrolling ping-pong between two items.
+- Logical position `occupied.size()` is the "bare hands" stop — the `+1` in the modulo. Preserve it.
