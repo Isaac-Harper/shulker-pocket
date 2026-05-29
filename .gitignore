@@ -1,0 +1,26 @@
+# Gradle / Loom
+.gradle/
+build/
+run/
+.loom-cache/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+
+# Eclipse / VS Code
+.classpath
+.project
+.settings/
+bin/
+.vscode/
+
+# macOS
+.DS_Store
+
+# Claude Code (local-only)
+.claude/settings.local.json
+.claude/scheduled_tasks.lock

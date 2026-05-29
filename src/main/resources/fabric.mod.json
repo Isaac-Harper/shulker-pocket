@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "id": "shulker_pocket",
+  "version": "${version}",
+  "name": "Shulker Pocket",
+  "description": "Turns an off-hand shulker box into a live, scrollable tool belt. Sneak + scroll cycles items through the main hand.",
+  "authors": [
+    "Isaac Harper"
+  ],
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "dev.isaac.shulkerpocket.ShulkerPocket"
+    ],
+    "client": [
+      "dev.isaac.shulkerpocket.client.ShulkerPocketClient"
+    ]
+  },
+  "mixins": [
+    {
+      "config": "shulker_pocket.client.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=0.18.5",
+    "minecraft": "~26.1.2",
+    "java": ">=25",
+    "fabric-api": "*"
+  }
+}
