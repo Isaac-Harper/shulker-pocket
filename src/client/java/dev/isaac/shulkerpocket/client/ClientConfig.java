@@ -29,6 +29,8 @@ public final class ClientConfig {
     public boolean playSounds = true;
     /** false → hold sneak to activate; true → hold the bindable activation key instead. */
     public boolean useActivationKey = false;
+    /** Show a discoverability hint line on shulker-box tooltips. */
+    public boolean showTooltipHint = true;
 
     private static Path configPath() {
         return FabricLoader.getInstance().getConfigDir().resolve("shulker_pocket.json");

@@ -139,7 +139,8 @@ ci.cancel()                                      // suppress vanilla hotbar chan
   "cooldownMs": 250,
   "allowEmptyPosition": true,
   "playSounds": true,
-  "useActivationKey": false
+  "useActivationKey": false,
+  "showTooltipHint": true
 }
 ```
 

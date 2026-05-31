@@ -40,5 +40,6 @@ its Config button on the Shulker Pocket row opens a settings screen. Otherwise, 
 | `allowEmptyPosition`      | `true`  | Let the cursor land on "bare hands".             |
 | `playSounds`              | `true`  | Play subtle swap / deny sounds.                  |
 | `useActivationKey`        | `false` | Activate with a bindable key instead of sneak.   |
+| `showTooltipHint`         | `true`  | Show a usage hint on shulker-box tooltips.       |
 
 See [SPEC.md](SPEC.md) for the full design, edge cases, and the `// VERIFY:` checklist.

@@ -13,6 +13,9 @@
   "shulker_pocket.config.activation.sneak": "Sneak",
   "shulker_pocket.config.activation.key": "Custom key",
   "shulker_pocket.config.activation.tooltip": "Hold Sneak, or a key you bind in Controls, while scrolling. Rebind under Options → Controls → Inventory.",
+  "shulker_pocket.config.tooltip_hint": "Tooltip hint",
+  "shulker_pocket.config.tooltip_hint.tooltip": "Show a usage hint on shulker-box tooltips.",
   "shulker_pocket.config.reset": "Reset to defaults",
+  "shulker_pocket.tooltip.hint": "%s + scroll in off-hand to cycle",
   "key.shulker_pocket.activate": "Activate scroll (Shulker Pocket)"
 }

@@ -23,7 +23,7 @@ public final class ConfigScreen extends Screen {
     private static final int WIDGET_WIDTH = 200;
     private static final int WIDGET_HEIGHT = 20;
     private static final int ROW_SPACING = 24;
-    private static final int ROWS = 5;
+    private static final int ROWS = 6;
 
     private final Screen parent;
 
@@ -33,6 +33,7 @@ public final class ConfigScreen extends Screen {
     private boolean allowEmptyPosition;
     private boolean playSounds;
     private boolean useActivationKey;
+    private boolean showTooltipHint;
 
     public ConfigScreen(Screen parent) {
         super(Component.translatable("shulker_pocket.config.title"));
@@ -46,6 +47,7 @@ public final class ConfigScreen extends Screen {
         this.allowEmptyPosition = cfg.allowEmptyPosition;
         this.playSounds = cfg.playSounds;
         this.useActivationKey = cfg.useActivationKey;
+        this.showTooltipHint = cfg.showTooltipHint;
     }
 
     private static Tooltip tip(String key) {
@@ -95,6 +97,13 @@ public final class ConfigScreen extends Screen {
             .create(x, y, WIDGET_WIDTH, WIDGET_HEIGHT,
                 Component.translatable("shulker_pocket.config.activation"),
                 (button, value) -> this.useActivationKey = value));
+        y += ROW_SPACING;
+
+        addRenderableWidget(CycleButton.onOffBuilder(this.showTooltipHint)
+            .withTooltip(v -> tip("shulker_pocket.config.tooltip_hint.tooltip"))
+            .create(x, y, WIDGET_WIDTH, WIDGET_HEIGHT,
+                Component.translatable("shulker_pocket.config.tooltip_hint"),
+                (button, value) -> this.showTooltipHint = value));
 
         int by = this.height - 28;
         addRenderableWidget(Button.builder(Component.translatable("shulker_pocket.config.reset"),
@@ -118,6 +127,7 @@ public final class ConfigScreen extends Screen {
         cfg.allowEmptyPosition = this.allowEmptyPosition;
         cfg.playSounds = this.playSounds;
         cfg.useActivationKey = this.useActivationKey;
+        cfg.showTooltipHint = this.showTooltipHint;
         cfg.save();
     }
 
