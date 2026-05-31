@@ -23,12 +23,25 @@ loom {
     }
 }
 
+repositories {
+    // Mod Menu lives on the Terraformers maven (Loom adds Mojang + Fabric repos itself).
+    maven {
+        name = "Terraformers"
+        url = "https://maven.terraformersmc.com/"
+    }
+}
+
 dependencies {
     // MC 26.1+ ships unobfuscated with Mojang names — no mappings line, and the
     // net.fabricmc.fabric-loom plugin does not remap, so deps use plain `implementation`.
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     implementation "net.fabricmc:fabric-loader:${project.loader_version}"
     implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
+    // Optional: provides the in-game config screen via the `modmenu` entrypoint. Not in the
+    // mod's `depends` (the mod runs fine without it), but needed on the compile/dev classpath.
+    // 26.1 is unobfuscated → plain `implementation`, never `modImplementation`.
+    implementation "com.terraformersmc:modmenu:${project.modmenu_version}"
 
     // Unit tests run under Fabric's JUnit launcher (bundles JUnit 5) so ContainerOps can be
     // exercised against real ItemStacks after a Minecraft Bootstrap.
@@ -72,9 +85,10 @@ modrinth {
     uploadFile = tasks.jar                 // no-remap loom: the plain jar is the mod jar
     gameVersions = ["${project.minecraft_version}"]
     loaders = ["fabric"]
-    changelog = "Initial alpha for Minecraft ${project.minecraft_version}."
+    changelog = "Adds an in-game config screen via Mod Menu (optional). See CHANGELOG.md for details."
     dependencies {
         required.project "fabric-api"
+        optional.project "modmenu"        // in-game config screen; the mod runs without it
     }
     syncBodyFrom = rootProject.file("README.md").text
 }

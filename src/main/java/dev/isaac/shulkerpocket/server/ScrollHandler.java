@@ -30,8 +30,11 @@ public final class ScrollHandler {
     public static void receive(ScrollPayload payload, ServerPlayNetworking.Context context) {
         ServerPlayer player = context.player();
 
-        // Anti-cheat: re-verify sneaking on the server. Never trust the client gate alone.
-        if (!player.isShiftKeyDown()) return;
+        // Anti-cheat: re-verify sneaking on the server for the default (sneak) activation. A custom
+        // activation key is client-only and not synced, so the server can't observe it — in that
+        // mode the client clears requireSneak and we trust the gated packet (the swap only
+        // rearranges the player's own inventory, so there's nothing to exploit).
+        if (payload.requireSneak() && !player.isShiftKeyDown()) return;
 
         ItemStack offhand = player.getOffhandItem();
         ItemContainerContents contents = offhand.get(DataComponents.CONTAINER);

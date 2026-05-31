@@ -60,12 +60,16 @@ but **not** the reverse. Keep anything the server needs in `src/main`.
 **The scroll round-trip** (one direction, client → server):
 
 1. `client/mixin/MouseHandlerMixin` injects at `MouseHandler#onScroll` HEAD. It gates on
-   screen-closed + sneaking + off-hand-is-a-container + `ScrollState` cooldown, then sends
-   `ScrollPayload` and **cancels** the callback to suppress the vanilla hotbar change.
-2. `network/ScrollPayload` (a `record` + `StreamCodec`) carries one byte: `-1` / `+1`. Registered
+   screen-closed + **activation held** + off-hand-is-a-container + `ScrollState` cooldown, then sends
+   `ScrollPayload` and **cancels** the callback to suppress the vanilla hotbar change. Activation is
+   sneak by default, or the rebindable `ShulkerPocketClient.ACTIVATE_KEY` when `useActivationKey` is set.
+2. `network/ScrollPayload` (a `record` + `StreamCodec`) carries the direction byte plus the
+   client-only prefs the server must honour (`allowEmpty`, `playSounds`, `requireSneak`). Registered
    in `ShulkerPocket#onInitialize` via `PayloadTypeRegistry.playC2S()`.
-3. `server/ScrollHandler#receive` re-checks sneaking (anti-cheat — never trusts the client),
-   reads the off-hand `ItemContainerContents`, and delegates to `ContainerOps`.
+3. `server/ScrollHandler#receive` re-checks sneaking (anti-cheat) **only when `requireSneak` is set** —
+   a custom activation key is client-only and unobservable server-side, so key mode clears the flag and
+   the gated packet is trusted (the swap only rearranges the player's own inventory). It reads the
+   off-hand `ItemContainerContents` and delegates to `ContainerOps`.
 4. `server/ContainerOps#swap` is the pure rotating-swap algorithm. It takes the player's current
    `homeSlot` and returns a `SwapResult` (new main-hand stack + new contents + new home slot) or
    `null` to refuse. `ScrollHandler` holds the per-player `UUID → homeSlot` cursor map, writes the
@@ -77,7 +81,12 @@ state and cannot be re-derived on the client by content-matching.
 
 **Config** (`client/ClientConfig`) is a plain GSON-serialized POJO at
 `config/shulker_pocket.json`, loaded once at client init and written with defaults if missing.
-It is client-only; the server does not read it.
+It is client-only; the server does not read it. When **Mod Menu** is installed (an optional dep,
+not in `depends`), the `modmenu` entrypoint `client/ModMenuIntegration` exposes a vanilla-widget
+`client/ConfigScreen` to edit the options in-game (with per-row tooltips and a Reset-to-defaults
+button); it commits to the live config and calls `ClientConfig.save()` only on *Done*. The screen
+avoids any custom rendering (no `GuiGraphicsExtractor`). The `useActivationKey` toggle pairs with the
+`ACTIVATE_KEY` keybind registered (Fabric `KeyMappingHelper`) in `ShulkerPocketClient`.
 
 ## Conventions
 

@@ -11,11 +11,14 @@ import net.minecraft.resources.Identifier;
  * One C2S payload for a scroll step. Carries the direction plus the two client-side preferences the
  * server needs to honour (config is client-only, so the relevant bits ride along with the action):
  *
- * @param direction  -1 (down) or +1 (up)
- * @param allowEmpty  whether the cursor may land on the "bare hands" stop
- * @param playSounds  whether the server should play feedback sounds for this player
+ * @param direction     -1 (down) or +1 (up)
+ * @param allowEmpty     whether the cursor may land on the "bare hands" stop
+ * @param playSounds     whether the server should play feedback sounds for this player
+ * @param requireSneak   whether the server should re-verify sneaking (true for sneak activation;
+ *                       false when a client-only key triggered it, which the server can't observe)
  */
-public record ScrollPayload(byte direction, boolean allowEmpty, boolean playSounds) implements CustomPacketPayload {
+public record ScrollPayload(byte direction, boolean allowEmpty, boolean playSounds, boolean requireSneak)
+        implements CustomPacketPayload {
     public static final CustomPacketPayload.Type<ScrollPayload> ID =
         new CustomPacketPayload.Type<>(Identifier.fromNamespaceAndPath(ShulkerPocket.MOD_ID, "scroll"));
 
@@ -24,6 +27,7 @@ public record ScrollPayload(byte direction, boolean allowEmpty, boolean playSoun
             ByteBufCodecs.BYTE, ScrollPayload::direction,
             ByteBufCodecs.BOOL, ScrollPayload::allowEmpty,
             ByteBufCodecs.BOOL, ScrollPayload::playSounds,
+            ByteBufCodecs.BOOL, ScrollPayload::requireSneak,
             ScrollPayload::new
         );
 

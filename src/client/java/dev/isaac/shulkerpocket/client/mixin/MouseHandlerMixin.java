@@ -26,7 +26,10 @@ public class MouseHandlerMixin {
         if (mc.screen != null) return; // a GUI is open → leave vanilla scroll alone
         Player player = mc.player;
         if (player == null) return;
-        if (!player.isShiftKeyDown()) return;
+
+        boolean useKey = ShulkerPocketClient.config.useActivationKey;
+        boolean activated = useKey ? ShulkerPocketClient.ACTIVATE_KEY.isDown() : player.isShiftKeyDown();
+        if (!activated) return;
 
         ItemStack offhand = player.getOffhandItem();
         if (!offhand.has(DataComponents.CONTAINER)) return;
@@ -43,7 +46,8 @@ public class MouseHandlerMixin {
         ClientPlayNetworking.send(new ScrollPayload(
             direction,
             ShulkerPocketClient.config.allowEmptyPosition,
-            ShulkerPocketClient.config.playSounds));
+            ShulkerPocketClient.config.playSounds,
+            !useKey)); // sneak mode → server re-verifies sneak; key mode → can't, so trust the gate
         ci.cancel(); // suppress the vanilla hotbar-slot change for this scroll event
     }
 }

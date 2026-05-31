@@ -136,13 +136,18 @@ ci.cancel()                                      // suppress vanilla hotbar chan
 ```json
 {
   "invertScroll": false,
-  "cooldownMs": 50,
+  "cooldownMs": 250,
   "allowEmptyPosition": true,
-  "playSounds": true
+  "playSounds": true,
+  "useActivationKey": false
 }
 ```
 
-No config screen v1. Edit the JSON. Add a YACL screen in v2 if useful.
+Editable in-game when **Mod Menu** is installed (an optional dependency): the `modmenu`
+entrypoint (`client/ModMenuIntegration`) hands Mod Menu a vanilla-widget `ConfigScreen` that edits
+a working copy and commits to `ClientConfig` + disk only on *Done*. Without Mod Menu, edit the JSON
+by hand. The screen uses plain renderable widgets (`CycleButton`, `AbstractSliderButton`,
+`StringWidget`) — no custom drawing — so it sidesteps the 26.1 render-extraction API.
 
 ## Mapping resolution (done at first compile against 26.1.2)
 

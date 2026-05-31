@@ -1,3 +1,18 @@
 {
-  "shulker_pocket.name": "Shulker Pocket"
+  "shulker_pocket.name": "Shulker Pocket",
+  "shulker_pocket.config.title": "Shulker Pocket",
+  "shulker_pocket.config.invert_scroll": "Invert scroll",
+  "shulker_pocket.config.invert_scroll.tooltip": "Flip which scroll direction advances the cursor.",
+  "shulker_pocket.config.cooldown": "Scroll cooldown: %d ms",
+  "shulker_pocket.config.cooldown.tooltip": "Minimum time between swaps. Lower is faster but easier to overshoot.",
+  "shulker_pocket.config.bare_hands_stop": "Bare-hands stop",
+  "shulker_pocket.config.bare_hands_stop.tooltip": "Include an empty 'bare hands' stop when cycling past the last item.",
+  "shulker_pocket.config.play_sounds": "Play sounds",
+  "shulker_pocket.config.play_sounds.tooltip": "Play subtle swap and deny sounds.",
+  "shulker_pocket.config.activation": "Activation",
+  "shulker_pocket.config.activation.sneak": "Sneak",
+  "shulker_pocket.config.activation.key": "Custom key",
+  "shulker_pocket.config.activation.tooltip": "Hold Sneak, or a key you bind in Controls, while scrolling. Rebind under Options → Controls → Inventory.",
+  "shulker_pocket.config.reset": "Reset to defaults",
+  "key.shulker_pocket.activate": "Activate scroll (Shulker Pocket)"
 }
