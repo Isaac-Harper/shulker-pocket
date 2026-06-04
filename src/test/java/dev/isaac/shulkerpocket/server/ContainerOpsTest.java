@@ -35,16 +35,19 @@ class ContainerOpsTest {
         // Register vanilla items so the registry is populated.
         SharedConstants.tryDetectVersion();
         Bootstrap.bootStrap();
+        //? if >=26.1 {
         // 26.1 binds per-item data components during a registry data-load phase that a bare bootstrap
         // doesn't run, so `new ItemStack(item)` throws "Components not bound yet". ContainerOps only
         // cares about item identity + isSameItemSameComponents (never component contents), so binding
         // an empty map to every item is enough to exercise the real ItemStack/ItemContainerContents paths.
+        // Pre-26.1 the normal bootstrap binds components, so this loop is not needed there.
         for (Item item : BuiltInRegistries.ITEM) {
             Holder.Reference<Item> holder = item.builtInRegistryHolder();
             if (!holder.areComponentsBound()) {
                 holder.bindComponents(DataComponentMap.EMPTY);
             }
         }
+        //?}
     }
 
     private record State(ItemStack hand, ItemContainerContents contents, int home) {}
