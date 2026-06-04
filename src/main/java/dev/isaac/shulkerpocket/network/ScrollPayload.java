@@ -5,7 +5,11 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+//? if >=1.21.11 {
 import net.minecraft.resources.Identifier;
+//?} else {
+/*import net.minecraft.resources.ResourceLocation;*/
+//?}
 
 /**
  * One C2S payload for a scroll step. Carries the direction plus the two client-side preferences the
@@ -20,7 +24,13 @@ import net.minecraft.resources.Identifier;
 public record ScrollPayload(byte direction, boolean allowEmpty, boolean playSounds, boolean requireSneak)
         implements CustomPacketPayload {
     public static final CustomPacketPayload.Type<ScrollPayload> ID =
+        //? if >=1.21.11 {
         new CustomPacketPayload.Type<>(Identifier.fromNamespaceAndPath(ShulkerPocket.MOD_ID, "scroll"));
+        //?} elif >=1.21 {
+        /*new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(ShulkerPocket.MOD_ID, "scroll"));*/
+        //?} else {
+        /*new CustomPacketPayload.Type<>(new ResourceLocation(ShulkerPocket.MOD_ID, "scroll"));*/
+        //?}
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ScrollPayload> CODEC =
         StreamCodec.composite(

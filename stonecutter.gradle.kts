@@ -12,11 +12,9 @@ stonecutter parameters {
         // handful of renamed symbols for older Minecraft. Each rule is centralized here, so the
         // source files themselves never carry old-version code.
 
-        // Mojang renamed ResourceLocation -> Identifier at 1.21.11 (package net.minecraft.resources
-        // is unchanged, so a bare token swap is correct).
-        string(current.parsed < "1.21.11") {
-            replace("Identifier", "ResourceLocation")
-        }
+        // Note: the ResourceLocation -> Identifier rename (1.21.11) and the further pre-1.21
+        // constructor-vs-factory difference are handled with local //? conditionals in ScrollPayload,
+        // since Identifier appears in only that one file.
 
         // Fabric API + client renames that landed at the 26.1 unobfuscation boundary.
         string(current.parsed < "26.1") {
@@ -24,9 +22,13 @@ stonecutter parameters {
             replace("keymapping.v1", "keybinding.v1")
             replace("KeyMappingHelper", "KeyBindingHelper")
             replace("registerKeyMapping", "registerKeyBinding")
-            // Typed key category -> the older String category argument. NOTE: the real boundary for
-            // KeyMapping.Category is somewhere in the 1.21.x line; narrow this when middle nodes are
-            // added (it is correct for the 1.21.1 + 26.1.2 proof-of-concept pair).
+        }
+
+        // The typed KeyMapping.Category enum was introduced at 1.21.9; older versions take a String
+        // translation key as the key-category argument. (Verified: 1.21.8 needs String, 1.21.10 needs
+        // the enum.) The 3-arg CycleButton.booleanBuilder is handled by a local //? in ConfigScreen
+        // (introduced at 1.21.11).
+        string(current.parsed < "1.21.9") {
             replace("KeyMapping.Category.INVENTORY", "\"key.categories.inventory\"")
         }
     }

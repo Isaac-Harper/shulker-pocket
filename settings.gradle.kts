@@ -16,9 +16,20 @@ plugins {
 
 stonecutter {
     create(rootProject) {
-        // Proof-of-concept nodes: the current shipping build plus the highest-value backport target.
-        // Fan the rest out (1.20.5, 1.21.3, 1.21.4, 1.21.5, ...) once these two are green.
-        versions("1.21.1", "26.1.2")
+        // One build node per binary-compatibility breakpoint from 1.20.5 to current. Each node's
+        // jar covers a patch range (see mod.mc_releases in stonecutter.properties.toml). 1.21.11 is
+        // the ResourceLocation -> Identifier rename boundary; 26.1 is the unobfuscation boundary.
+        versions(
+            "1.20.6",   // covers 1.20.5, 1.20.6
+            "1.21.1",   // covers 1.21, 1.21.1
+            "1.21.3",   // covers 1.21.2, 1.21.3
+            "1.21.4",
+            "1.21.5",
+            "1.21.8",   // covers 1.21.6, 1.21.7, 1.21.8
+            "1.21.10",  // covers 1.21.9, 1.21.10
+            "1.21.11",
+            "26.1.2",   // covers 26.1, 26.1.1, 26.1.2
+        )
         vcsVersion = "26.1.2"
     }
 }

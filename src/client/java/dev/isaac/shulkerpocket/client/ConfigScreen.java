@@ -92,11 +92,11 @@ public final class ConfigScreen extends Screen {
         addRenderableWidget(CycleButton.booleanBuilder(
                 Component.translatable("shulker_pocket.config.activation.key"),
                 Component.translatable("shulker_pocket.config.activation.sneak")
-                //? if >=26.1 {
+                //? if >=1.21.11 {
                 , this.useActivationKey
                 //?}
                 )
-            //? if <26.1 {
+            //? if <1.21.11 {
             /*.withInitialValue(this.useActivationKey)*/
             //?}
             .withTooltip(v -> tip("shulker_pocket.config.activation.tooltip"))
