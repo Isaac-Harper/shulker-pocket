@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.0
+
+- Multi-version support: the mod now builds for Minecraft **1.20.5 through 26.1.x** from a single
+  source tree (via Stonecutter), published as one Modrinth version per Minecraft build.
+- No gameplay changes; the sneak + scroll swap behaves identically across all supported versions.
+
 ## 0.2.2
 
 - Open-sourced under the MIT License; the GitHub repository is now public.

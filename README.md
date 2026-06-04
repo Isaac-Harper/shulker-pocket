@@ -6,7 +6,7 @@ hotbar juggling.
 
 [![Modrinth](https://img.shields.io/modrinth/v/shulker-pocket?logo=modrinth&color=00AF5C&label=Modrinth)](https://modrinth.com/mod/shulker-pocket)
 [![Downloads](https://img.shields.io/modrinth/dt/shulker-pocket?logo=modrinth&color=00AF5C&label=downloads)](https://modrinth.com/mod/shulker-pocket)
-[![Minecraft](https://img.shields.io/badge/Minecraft-26.1.2-62B47A?logo=minecraft)](https://www.minecraft.net/)
+[![Minecraft](https://img.shields.io/badge/Minecraft-1.20.5--26.1.x-62B47A?logo=minecraft)](https://www.minecraft.net/)
 [![Fabric](https://img.shields.io/badge/Loader-Fabric-DBD0B4)](https://fabricmc.net/)
 [![Build](https://github.com/Isaac-Harper/shulker-pocket/actions/workflows/build.yml/badge.svg)](https://github.com/Isaac-Harper/shulker-pocket/actions/workflows/build.yml)
 
@@ -31,8 +31,8 @@ changes, and you know what's in your box.
 ## Install
 
 Requires **[Fabric Loader](https://fabricmc.net/use/installer/)** and
-**[Fabric API](https://modrinth.com/mod/fabric-api)** on Minecraft **26.1.2**. Must be installed on
-**both** the client and the server.
+**[Fabric API](https://modrinth.com/mod/fabric-api)** on Minecraft **1.20.5 through 26.1.x**. Must be
+installed on **both** the client and the server.
 
 **[Download on Modrinth](https://modrinth.com/mod/shulker-pocket)** or grab a jar from
 **[GitHub Releases](https://github.com/Isaac-Harper/shulker-pocket/releases)**.
@@ -54,16 +54,19 @@ its Config button on the Shulker Pocket row opens a settings screen. Otherwise, 
 
 ## Building from source
 
-Requires **JDK 25**. Minecraft 26.1 ships unobfuscated, so the build uses the
-`net.fabricmc.fabric-loom` plugin with no remap step.
+Requires **JDK 25** (the Gradle toolchain pulls JDK 21 for the older Minecraft targets). The mod is
+built from a single source tree across every supported Minecraft version with
+[Stonecutter](https://stonecutter.kikugie.dev/): the current version's dialect is the source of
+truth, and older versions are generated from it.
 
 ```sh
-./gradlew build      # -> build/libs/shulker-pocket-<version>.jar
-./gradlew runClient  # launch a dev client
-./gradlew test       # run the JUnit suite
+./gradlew chiseledBuild   # build + test every supported Minecraft version
+./gradlew build           # build + test just the active version (26.1.x)
+./gradlew runClient       # launch a dev client for the active version
 ```
 
-The design and swap algorithm are documented in [SPEC.md](SPEC.md).
+Per-version jars land in `versions/<mc>/build/libs/`. The design and swap algorithm are documented
+in [SPEC.md](SPEC.md).
 
 ## License
 

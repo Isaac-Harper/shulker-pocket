@@ -26,7 +26,8 @@ stonecutter {
             "1.21.4",
             "1.21.5",
             "1.21.8",   // covers 1.21.6, 1.21.7, 1.21.8
-            "1.21.10",  // covers 1.21.9, 1.21.10
+            "1.21.9",   // KeyMapping.Category enum boundary (verified directly)
+            "1.21.10",
             "1.21.11",
             "26.1.2",   // covers 26.1, 26.1.1, 26.1.2
         )

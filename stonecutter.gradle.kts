@@ -33,3 +33,22 @@ stonecutter parameters {
         }
     }
 }
+
+// Fan a task out across every version node. `chiseledBuild` compiles + tests all nodes (used by CI);
+// `chiseledPublishMods` uploads every node's jar to Modrinth (used by the tag publish job).
+tasks.register("chiseledBuild") {
+    group = "build"
+    description = "Compiles and tests every version node."
+    dependsOn(stonecutter.tasks.named("build"))
+}
+
+tasks.register("chiseledPublishMods") {
+    group = "publishing"
+    description = "Publishes every version node's jar to Modrinth."
+    dependsOn(stonecutter.tasks.named("publishMods"))
+}
+
+// Upload versions in a defined order so they list sensibly on Modrinth.
+stonecutter tasks {
+    order("publishModrinth")
+}

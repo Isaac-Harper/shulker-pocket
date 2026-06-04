@@ -2,6 +2,7 @@ plugins {
     // Picks the remapping loom for obfuscated MC (<26.1) and the no-remap loom for 26.1+,
     // and exposes a uniform modImplementation / applyMojangMappings / modJar API for both.
     id("dev.kikugie.loom-back-compat")
+    id("me.modmuss50.mod-publish-plugin") version "1.1.0"
 }
 
 // Per Stonecutter: do NOT set group here.
@@ -87,5 +88,26 @@ java {
     targetCompatibility = requiredJava
     toolchain {
         languageVersion = JavaLanguageVersion.of(requiredJava.majorVersion)
+    }
+}
+
+// Modrinth publishing. Each node uploads one version (file `0.3.0+<mc>`) with its own gameVersions.
+// Fan out across all nodes with the chiseledPublishMods task (see stonecutter.gradle.kts). Without a
+// MODRINTH_TOKEN (local runs) it dry-runs: config is validated but nothing is uploaded.
+publishMods {
+    file = loomx.modJar.flatMap { it.archiveFile }
+    version = project.version.toString()
+    type = me.modmuss50.mpp.ReleaseType.STABLE
+    displayName = "Shulker Pocket ${project.version}"
+    modLoaders.add("fabric")
+    changelog = "Multi-version release built from one source tree. See CHANGELOG.md in the repository."
+    dryRun = !providers.environmentVariable("MODRINTH_TOKEN").isPresent
+
+    modrinth {
+        projectId = property("mod.modrinth_id") as String
+        accessToken = providers.environmentVariable("MODRINTH_TOKEN")
+        minecraftVersions.addAll(compatibleVersions)
+        requires("fabric-api")
+        optional("modmenu")
     }
 }
