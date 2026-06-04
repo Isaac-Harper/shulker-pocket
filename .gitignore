@@ -1,0 +1,36 @@
+# Gradle / Loom
+.gradle/
+build/
+run/
+.loom-cache/
+.fabric/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+
+# Eclipse / VS Code
+.classpath
+.project
+.settings/
+bin/
+.vscode/
+
+# macOS
+.DS_Store
+
+# Claude Code (local-only)
+.claude/settings.local.json
+.claude/scheduled_tasks.lock
+CLAUDE.md
+docs/promotion.md
+
+# Minecraft runtime logs
+logs/
+
+# Secrets / local env (never commit)
+.env
+.env.*

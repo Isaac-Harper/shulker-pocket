@@ -1,0 +1,94 @@
+plugins {
+    id 'net.fabricmc.fabric-loom' version "${loom_version}"
+    id 'maven-publish'
+    id 'com.modrinth.minotaur' version '2.9.0'
+}
+
+version = project.mod_version
+group = project.maven_group
+
+base {
+    archivesName = project.archives_base_name
+}
+
+loom {
+    // Separate `main` (common + server) and `client` source sets.
+    splitEnvironmentSourceSets()
+
+    mods {
+        "shulker_pocket" {
+            sourceSet sourceSets.main
+            sourceSet sourceSets.client
+        }
+    }
+}
+
+repositories {
+    // Mod Menu lives on the Terraformers maven (Loom adds Mojang + Fabric repos itself).
+    maven {
+        name = "Terraformers"
+        url = "https://maven.terraformersmc.com/"
+    }
+}
+
+dependencies {
+    // MC 26.1+ ships unobfuscated with Mojang names; no mappings line, and the
+    // net.fabricmc.fabric-loom plugin does not remap, so deps use plain `implementation`.
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    implementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
+    // Optional: provides the in-game config screen via the `modmenu` entrypoint. Not in the
+    // mod's `depends` (the mod runs fine without it), but needed on the compile/dev classpath.
+    // 26.1 is unobfuscated → plain `implementation`, never `modImplementation`.
+    implementation "com.terraformersmc:modmenu:${project.modmenu_version}"
+
+    // Unit tests run under Fabric's JUnit launcher (bundles JUnit 5) so ContainerOps can be
+    // exercised against real ItemStacks after a Minecraft Bootstrap.
+    testImplementation "net.fabricmc:fabric-loader-junit:${project.loader_version}"
+}
+
+test {
+    useJUnitPlatform()
+}
+
+processResources {
+    inputs.property 'version', project.version
+
+    filesMatching('fabric.mod.json') {
+        expand 'version': project.version
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    it.options.release = 25
+}
+
+java {
+    withSourcesJar()
+
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
+}
+
+// Modrinth publishing (Minotaur). Publish with:
+//   MODRINTH_TOKEN=<your PAT> ./gradlew modrinth
+// Push README.md as the project description with:
+//   MODRINTH_TOKEN=<your PAT> ./gradlew modrinthSyncBody
+// Set modrinth_project_id in gradle.properties to your project's slug or ID once it exists.
+modrinth {
+    token = System.getenv("MODRINTH_TOKEN")
+    projectId = project.modrinth_project_id
+    versionNumber = project.version
+    versionName = "Shulker Pocket ${project.version}"
+    versionType = "release"
+    uploadFile = tasks.jar                 // no-remap loom: the plain jar is the mod jar
+    gameVersions = ["${project.minecraft_version}"]
+    loaders = ["fabric"]
+    changelog = "Open-sourced under the MIT License; the GitHub repo is now public, with the README's build badge, demo GIFs, and build-from-source section restored. No gameplay changes since 0.2.1. See CHANGELOG.md for details."
+    dependencies {
+        required.project "fabric-api"
+        optional.project "modmenu"        // in-game config screen; the mod runs without it
+    }
+    syncBodyFrom = rootProject.file("README.md").text
+}

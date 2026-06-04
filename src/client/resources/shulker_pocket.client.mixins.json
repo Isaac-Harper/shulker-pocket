@@ -1,0 +1,11 @@
+{
+  "required": true,
+  "package": "dev.isaac.shulkerpocket.client.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "client": [
+    "MouseHandlerMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
