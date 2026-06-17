@@ -22,7 +22,7 @@ bin/
 # macOS
 .DS_Store
 
-# Claude Code (local-only)
+# Local-only editor / tooling files
 .claude/settings.local.json
 .claude/scheduled_tasks.lock
 CLAUDE.md
