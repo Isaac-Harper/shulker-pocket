@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.1
+
+- Added support for Minecraft **26.2**. The mod now builds for **1.20.5 through 26.2.x** from the
+  single source tree. 26.2 moved the client current-screen state onto `Minecraft.gui`
+  (`screen()` / `setScreenAndShow`); handled by a Stonecutter downgrade rule for older versions.
+- No gameplay changes; the sneak + scroll swap behaves identically across all supported versions.
+
 ## 0.3.0
 
 - Multi-version support: the mod now builds for Minecraft **1.20.5 through 26.1.x** from a single

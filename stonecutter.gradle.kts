@@ -4,7 +4,7 @@ plugins {
 
 // Active = the version your IDE compiles and the state src/ is left in. Keep it on current MC so
 // day-to-day development is in the current dialect; older versions are generated from it.
-stonecutter active "26.1.2"
+stonecutter active "26.2"
 
 stonecutter parameters {
     replacements {
@@ -22,6 +22,14 @@ stonecutter parameters {
             replace("keymapping.v1", "keybinding.v1")
             replace("KeyMappingHelper", "KeyBindingHelper")
             replace("registerKeyMapping", "registerKeyBinding")
+        }
+
+        // Client screen API renames at the 26.2 boundary. 26.2 moved the current-screen field off
+        // Minecraft and onto its Gui (Minecraft.screen -> Minecraft.gui.screen()), and renamed the
+        // setter (setScreen -> setScreenAndShow). Source is in 26.2 dialect; downgrade for <26.2.
+        string(current.parsed < "26.2") {
+            replace("setScreenAndShow", "setScreen")
+            replace("gui.screen()", "screen")   // mc.gui.screen() -> mc.screen
         }
 
         // The typed KeyMapping.Category enum was introduced at 1.21.9; older versions take a String

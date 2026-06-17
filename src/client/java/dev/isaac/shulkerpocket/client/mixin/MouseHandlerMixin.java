@@ -23,7 +23,7 @@ public class MouseHandlerMixin {
     @Inject(method = "onScroll(JDD)V", at = @At("HEAD"), cancellable = true)
     private void shulker_pocket$onScroll(long window, double horizontal, double vertical, CallbackInfo ci) {
         Minecraft mc = Minecraft.getInstance();
-        if (mc.screen != null) return; // a GUI is open → leave vanilla scroll alone
+        if (mc.gui.screen() != null) return; // a GUI is open → leave vanilla scroll alone
         Player player = mc.player;
         if (player == null) return;
 

@@ -30,8 +30,9 @@ stonecutter {
             "1.21.10",
             "1.21.11",
             "26.1.2",   // covers 26.1, 26.1.1, 26.1.2
+            "26.2",     // current; unobfuscated like 26.1
         )
-        vcsVersion = "26.1.2"
+        vcsVersion = "26.2"
     }
 }
 

@@ -139,7 +139,7 @@ public final class ConfigScreen extends Screen {
 
     @Override
     public void onClose() {
-        this.minecraft.setScreen(this.parent);
+        this.minecraft.setScreenAndShow(this.parent);
     }
 
     /** Slider over {@code [COOLDOWN_MIN_MS, COOLDOWN_MAX_MS]}, snapped to 10&nbsp;ms steps. */
