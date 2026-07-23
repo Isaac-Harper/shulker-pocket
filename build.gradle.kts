@@ -36,6 +36,22 @@ loom {
     }
 }
 
+// Server GameTest harness. Only wired on the current-dialect nodes (26.1+), which use the real
+// `net.fabricmc.fabric-loom` and its `fabricApi` test DSL; the active node (26.2) is where the source
+// of truth lives and where `runGameTest` is meant to run. `createSourceSet = true` gives the tests
+// their own `src/gametest` source set with its own fabric.mod.json (fabric-gametest entrypoint), so
+// nothing test-related ships in the mod jar. This also registers the `runGameTest` task and sets
+// `-Dfabric-api.gametest` for us. The behavior under test is server-side; client game tests only run
+// via the separate `runClientGameTest` task, never on `build`/`runGameTest`, so they're left default.
+if (sc.current.parsed >= "26.1") {
+    (extensions.getByName("fabricApi") as net.fabricmc.loom.api.fabricapi.FabricApiExtension)
+        .configureTests {
+            createSourceSet.set(true)
+            modId.set("shulker_pocket_gametest")
+            eula.set(true)
+        }
+}
+
 val fabricApiVersion: String = sc.properties["deps.fabric_api"]
 val modmenuVersion: String = sc.properties["deps.modmenu"]
 

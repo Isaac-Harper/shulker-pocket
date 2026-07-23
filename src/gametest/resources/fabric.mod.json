@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "id": "shulker_pocket_gametest",
+  "version": "1.0.0",
+  "name": "Shulker Pocket GameTests",
+  "description": "In-world GameTests for Shulker Pocket. Dev/test only; never shipped in the mod jar.",
+  "environment": "server",
+  "entrypoints": {
+    "fabric-gametest": [
+      "dev.isaac.shulkerpocket.gametest.ScrollGameTest"
+    ]
+  },
+  "depends": {
+    "shulker_pocket": "*"
+  }
+}
