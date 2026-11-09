@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Added support for Minecraft **26.3**. 26.3 dropped the LWJGL GLFW key constants from the client
+  keybind default (`InputConstants.Type.KEYBOARD` and `InputConstants.KEY_LALT`); older versions keep
+  the previous form through a Stonecutter conditional.
+
 ## 0.3.1
 
 - Added support for Minecraft **26.2**. The mod now builds for **1.20.5 through 26.2.x** from the

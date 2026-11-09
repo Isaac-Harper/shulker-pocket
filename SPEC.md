@@ -3,8 +3,8 @@
 A Fabric mod that turns an off-hand shulker box into a live, scrollable tool belt.
 Sneak + scroll cycles items through the main hand.
 
-> **Status:** working end-to-end (M1–M3). Builds against MC 1.20.5 through 26.2.x (active
-> dialect 26.2 via Stonecutter), scroll round-trips,
+> **Status:** working end-to-end (M1–M3). Builds against MC 1.20.5 through 26.3.x (active
+> dialect 26.3 via Stonecutter), scroll round-trips,
 > and sneak+scroll cycles through all items in-game. The HUD (M4) was dropped by design.
 > Remaining: M5 (sounds, config polish, and packaging for release).
 
@@ -12,9 +12,9 @@ Sneak + scroll cycles items through the main hand.
 
 | Component       | Version                       |
 | --------------- | ----------------------------- |
-| Minecraft       | 26.2 (active dev dialect)     |
+| Minecraft       | 26.3 (active dev dialect)     |
 | Fabric Loader   | 0.19.2                        |
-| Fabric API      | 0.152.1+26.2                  |
+| Fabric API      | 0.165.2+26.3                  |
 | Fabric Loom     | `net.fabricmc.fabric-loom` 1.16-SNAPSHOT |
 | Mappings        | None. MC 26.1 ships unobfuscated (real Mojang names) |
 | Java            | 25                            |

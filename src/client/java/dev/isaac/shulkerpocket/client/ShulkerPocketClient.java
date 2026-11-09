@@ -9,7 +9,9 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
+//? if <26.3 {
+/*import org.lwjgl.glfw.GLFW;*/
+//?}
 
 /** Client entrypoint. Loads config; scroll detection lives in {@code MouseHandlerMixin}. */
 public class ShulkerPocketClient implements ClientModInitializer {
@@ -21,8 +23,13 @@ public class ShulkerPocketClient implements ClientModInitializer {
      */
     public static final KeyMapping ACTIVATE_KEY = new KeyMapping(
         "key.shulker_pocket.activate",
-        InputConstants.Type.KEYSYM,
-        GLFW.GLFW_KEY_LEFT_ALT,
+        //? if >=26.3 {
+        InputConstants.Type.KEYBOARD,
+        InputConstants.KEY_LALT,
+        //?} else {
+        /*InputConstants.Type.KEYSYM,
+        GLFW.GLFW_KEY_LEFT_ALT,*/
+        //?}
         KeyMapping.Category.INVENTORY);
 
     @Override
