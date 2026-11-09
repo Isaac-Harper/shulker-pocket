@@ -13,7 +13,7 @@ Sneak + scroll cycles items through the main hand.
 | Component       | Version                       |
 | --------------- | ----------------------------- |
 | Minecraft       | 26.3 (active dev dialect)     |
-| Fabric Loader   | 0.19.2                        |
+| Fabric Loader   | 0.20.1                        |
 | Fabric API      | 0.165.2+26.3                  |
 | Fabric Loom     | `net.fabricmc.fabric-loom` 1.16-SNAPSHOT |
 | Mappings        | None. MC 26.1 ships unobfuscated (real Mojang names) |

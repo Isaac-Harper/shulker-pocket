@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.3.2
 
 - Added support for Minecraft **26.3**. 26.3 dropped the LWJGL GLFW key constants from the client
   keybind default (`InputConstants.Type.KEYBOARD` and `InputConstants.KEY_LALT`); older versions keep

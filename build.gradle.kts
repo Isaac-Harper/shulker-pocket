@@ -37,7 +37,7 @@ loom {
 }
 
 // Server GameTest harness. Only wired on the current-dialect nodes (26.1+), which use the real
-// `net.fabricmc.fabric-loom` and its `fabricApi` test DSL; the active node (26.2) is where the source
+// `net.fabricmc.fabric-loom` and its `fabricApi` test DSL; the active node (26.3) is where the source
 // of truth lives and where `runGameTest` is meant to run. `createSourceSet = true` gives the tests
 // their own `src/gametest` source set with its own fabric.mod.json (fabric-gametest entrypoint), so
 // nothing test-related ships in the mod jar. This also registers the `runGameTest` task and sets

@@ -6,7 +6,7 @@ hotbar juggling.
 
 [![Modrinth](https://img.shields.io/modrinth/v/shulker-pocket?logo=modrinth&color=00AF5C&label=Modrinth)](https://modrinth.com/mod/shulker-pocket)
 [![Downloads](https://img.shields.io/modrinth/dt/shulker-pocket?logo=modrinth&color=00AF5C&label=downloads)](https://modrinth.com/mod/shulker-pocket)
-[![Minecraft](https://img.shields.io/badge/Minecraft-1.20.5--26.1.x-62B47A?logo=minecraft)](https://www.minecraft.net/)
+[![Minecraft](https://img.shields.io/badge/Minecraft-1.20.5--26.3.x-62B47A?logo=minecraft)](https://www.minecraft.net/)
 [![Fabric](https://img.shields.io/badge/Loader-Fabric-DBD0B4)](https://fabricmc.net/)
 [![Build](https://github.com/Isaac-Harper/shulker-pocket/actions/workflows/build.yml/badge.svg)](https://github.com/Isaac-Harper/shulker-pocket/actions/workflows/build.yml)
 
@@ -31,7 +31,7 @@ changes, and you know what's in your box.
 ## Install
 
 Requires **[Fabric Loader](https://fabricmc.net/use/installer/)** and
-**[Fabric API](https://modrinth.com/mod/fabric-api)** on Minecraft **1.20.5 through 26.1.x**. Must be
+**[Fabric API](https://modrinth.com/mod/fabric-api)** on Minecraft **1.20.5 through 26.3.x**. Must be
 installed on **both** the client and the server.
 
 **[Download on Modrinth](https://modrinth.com/mod/shulker-pocket)** or grab a jar from

@@ -1,7 +1,7 @@
 # Centralized per-version properties. Top-level keys are shared across all nodes; each [version]
 # section overrides for that Minecraft build. See https://stonecutter.kikugie.dev/wiki/config/properties
 mod.id = "shulker_pocket"
-mod.version = "0.3.1"
+mod.version = "0.3.2"
 mod.modrinth_id = "hfBI4FCu"
 
 deps.fabric_loader = "0.19.2"
